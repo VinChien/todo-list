@@ -45,23 +45,55 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 設定路由
 // Todo 首頁
 app.get('/', (req, res) => {
-  Todo.find()
+  return Todo.find()
     .lean()
     .then((todos) => res.render('index', { todos: todos }))
     .catch((error) => console.error(error));
 });
 
-// new
-app.get('/todos/news', (req, res) => {
+// new 頁面
+app.get('/todos/new', (req, res) => {
   res.render('new');
 });
+
+// detail
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id;
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('detail', { todo: todo }))
+    .catch((error) => console.log(error));
+});
+
+// edit
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id;
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('edit', { todo: todo }))
+    .catch((error) => console.log(error));
+});
+
+// 新增 todo
 app.post('/todos', (req, res) => {
   // 從 req.body 拿出表單的 name 資料
   const name = req.body.name;
   // 存入資料庫
-  Todo.create({ name })
-    // 新增完成後導回 index
-    .then(() => res.redirect('/'))
+  return Todo.create({ name })
+    .then(() => res.redirect('/')) // 新增完成後導回 index
+    .catch((error) => console.log(error));
+});
+
+// edit
+app.post('/todos/:id/edit', (req, res) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  return Todo.findById(id)
+    .then((todo) => {
+      todo.name = name;
+      return todo.save();
+    })
+    .then(() => res.redirect(`/todos/${id}`))
     .catch((error) => console.log(error));
 });
 
