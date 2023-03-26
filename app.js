@@ -3,6 +3,12 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+// 指定樣板引擎
+const exphbs = require('express-handlebars');
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
+// 啟動樣板引勤
+app.set('view engine', 'hbs');
+
 // 載入 mongoose
 const mongoose = require('mongoose');
 
@@ -12,7 +18,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // 設定連線到 mongoDB
-mongoose.connect(process.env.MONGODB_URL, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -28,8 +34,9 @@ db.once('open', () => {
 });
 
 // 設定路由
+// Todo 首頁
 app.get('/', (req, res) => {
-  res.send('hello world');
+  res.render('index');
 });
 
 // 啟動伺服器
