@@ -33,10 +33,16 @@ db.once('open', () => {
   console.log('mongodb connected');
 });
 
+// 載入 Todo model
+const Todo = require('./models/todo');
+
 // 設定路由
 // Todo 首頁
 app.get('/', (req, res) => {
-  res.render('index');
+  Todo.find()
+    .lean()
+    .then((todos) => res.render('index', { todos: todos }))
+    .catch((error) => console.error(error));
 });
 
 // 啟動伺服器
