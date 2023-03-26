@@ -36,6 +36,12 @@ db.once('open', () => {
 // 載入 Todo model
 const Todo = require('./models/todo');
 
+// 引用 body-parser
+const bodyParser = require('body-parser');
+
+//用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // 設定路由
 // Todo 首頁
 app.get('/', (req, res) => {
@@ -43,6 +49,20 @@ app.get('/', (req, res) => {
     .lean()
     .then((todos) => res.render('index', { todos: todos }))
     .catch((error) => console.error(error));
+});
+
+// new
+app.get('/todos/news', (req, res) => {
+  res.render('new');
+});
+app.post('/todos', (req, res) => {
+  // 從 req.body 拿出表單的 name 資料
+  const name = req.body.name;
+  // 存入資料庫
+  Todo.create({ name })
+    // 新增完成後導回 index
+    .then(() => res.redirect('/'))
+    .catch((error) => console.log(error));
 });
 
 // 啟動伺服器
