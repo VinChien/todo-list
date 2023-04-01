@@ -17,6 +17,11 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+// 載入 method-override
+const methodOverride = require('method-override');
+// 設定每筆要求都透過 methodOverride 作前置處理
+app.use(methodOverride('_method'));
+
 // 設定連線到 mongoDB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -86,7 +91,8 @@ app.post('/todos', (req, res) => {
 });
 
 // edit
-app.post('/todos/:id/edit', (req, res) => {
+// app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id;
   const name = req.body.name;
   const isDone = req.body.isDone;
@@ -101,7 +107,8 @@ app.post('/todos/:id/edit', (req, res) => {
 });
 
 // delete
-app.post('/todos/:id/delete', (req, res) => {
+// app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id;
   return Todo.findById(id)
     .then((todo) => todo.remove())
