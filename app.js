@@ -8,7 +8,7 @@ const exphbs = require('express-handlebars');
 // 載入 Todo model
 // const Todo = require('./models/todo');
 // 載入 mongoose
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 // 僅在非正式環境使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -19,6 +19,9 @@ const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 // 引用路由器
 const routes = require('./routes');
+
+// 引用 mongoose 設定檔
+require('./config/mongoose');
 
 // 指定樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
@@ -32,20 +35,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(routes);
 
 // 設定連線到 mongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect(process.env.MONGODB_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
-const db = mongoose.connection;
+// const db = mongoose.connection;
 
-db.on('error', () => {
-  console.log('mongodb error!');
-});
+// db.on('error', () => {
+//   console.log('mongodb error!');
+// });
 
-db.once('open', () => {
-  console.log('mongodb connected');
-});
+// db.once('open', () => {
+//   console.log('mongodb connected');
+// });
 
 // 設定路由
 // Todo 首頁

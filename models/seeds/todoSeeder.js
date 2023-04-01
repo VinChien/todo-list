@@ -1,20 +1,24 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 // 載入 todo model
 const Todo = require('../todo');
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// 引用 mongoose 設定檔
+const db = require('../../config/mongoose');
 
-const db = mongoose.connection;
+// if (process.env.NODE_ENV !== 'production') {
+//   require('dotenv').config();
+// }
 
-db.on('error', () => {
-  console.log('mongodb error!');
-});
+// mongoose.connect(process.env.MONGODB_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+// const db = mongoose.connection;
+
+// db.on('error', () => {
+//   console.log('mongodb error!');
+// });
 
 db.once('open', () => {
   console.log('mongodb connected!');
