@@ -1,7 +1,9 @@
 // 載入 express 並建構應用程式伺服器
 const express = require('express');
 const app = express();
-const port = 3000;
+// 如果在 Heroku 環境則使用 process.env.PORT
+// 否則為本地環境，使用 3000
+const port = process.env.PORT || 3000;
 
 // 載入 express-handlebars
 const exphbs = require('express-handlebars');
