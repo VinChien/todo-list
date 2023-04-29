@@ -1,6 +1,8 @@
 const passport = require('passport');
 // 載入 LocalStrategy模組
 const LocalStrategy = require('passport-local').Strategy;
+
+const bcrypt = require('bcryptjs');
 // 載入 User model
 const User = require('../models/user');
 // module.exports 並初始化套件，直接匯出一個 function
@@ -18,12 +20,14 @@ module.exports = (app) => {
               message: 'That email is not registered!',
             });
           }
-          if (user.password !== password) {
-            return done(null, false, {
-              message: 'Email or Password incorrect.',
-            });
-          }
-          return done(null, user);
+          return bcrypt.compare(password, user.password).then((isMatch) => {
+            if (!isMatch) {
+              return done(null, false, {
+                message: 'Email or Password incorrect.',
+              });
+            }
+            return done(null, user);
+          });
         })
         .catch((err) => done(err, false));
     })
