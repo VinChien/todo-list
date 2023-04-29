@@ -38,7 +38,7 @@ app.set('view engine', 'hbs');
 // 設定 express-session
 app.use(
   session({
-    secret: 'ThisIsMySecret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
