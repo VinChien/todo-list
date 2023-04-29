@@ -4,7 +4,7 @@ const app = express();
 // 設定 express-session
 const session = require('express-session');
 // 載入設定檔，要寫在 express-session 以後
-const usePassport = require('./config/passport')
+const usePassport = require('./config/passport');
 // 如果在 Heroku 環境則使用 process.env.PORT
 // 否則為本地環境，使用 3000
 const port = process.env.PORT || 3000;
@@ -29,9 +29,6 @@ const routes = require('./routes');
 // 引用 mongoose 設定檔
 require('./config/mongoose');
 
-// 呼叫 Passport 函式並傳入 app，這條要寫在路由之前
-usePassport(app)
-
 // 指定樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
 // 啟動樣板引勤
@@ -48,6 +45,15 @@ app.use(
 app.use(methodOverride('_method'));
 //用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
 app.use(bodyParser.urlencoded({ extended: true }));
+// 呼叫 Passport 函式並傳入 app，這條要寫在路由之前
+usePassport(app);
+// 在 usePassport(app) 之後、app.use(routes) 之前，加入一組 middleware
+app.use((req, res, next) => {
+  // 你可以在這裡 console.log(req.user) 等資訊來觀察
+  res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.user = req.user;
+  next();
+});
 // 將 request 導入路由器
 app.use(routes);
 
