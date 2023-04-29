@@ -1,6 +1,8 @@
 // 載入 express 並建構應用程式伺服器
 const express = require('express');
 const app = express();
+// 設定 express-session
+const session = require('express-session');
 // 如果在 Heroku 環境則使用 process.env.PORT
 // 否則為本地環境，使用 3000
 const port = process.env.PORT || 3000;
@@ -29,6 +31,14 @@ require('./config/mongoose');
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
 // 啟動樣板引勤
 app.set('view engine', 'hbs');
+// 設定 express-session
+app.use(
+  session({
+    secret: 'ThisIsMySecret',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 // 設定每筆要求都透過 methodOverride 作前置處理
 app.use(methodOverride('_method'));
 //用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
