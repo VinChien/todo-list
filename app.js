@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 // 設定 express-session
 const session = require('express-session');
+// 載入設定檔，要寫在 express-session 以後
+const usePassport = require('./config/passport')
 // 如果在 Heroku 環境則使用 process.env.PORT
 // 否則為本地環境，使用 3000
 const port = process.env.PORT || 3000;
@@ -26,6 +28,9 @@ const routes = require('./routes');
 
 // 引用 mongoose 設定檔
 require('./config/mongoose');
+
+// 呼叫 Passport 函式並傳入 app，這條要寫在路由之前
+usePassport(app)
 
 // 指定樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
